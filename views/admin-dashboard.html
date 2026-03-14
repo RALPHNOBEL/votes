@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Administrateur - Plateforme de Vote</title>
+    
+    <!-- DaisyUI et Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Styles personnalisés -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js pour les graphiques -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <div class="navbar bg-white shadow-lg fixed">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a href="#dashboard">Dashboard</a></li>
+                    <li><a href="#candidats">Candidats</a></li>
+                    <li><a href="#electeurs">Électeurs</a></li>
+                    <li><a href="#votes">Votes</a></li>
+                    <li><a href="#parametres">Paramètres</a></li>
+                </ul>
+            </div>
+            <a class="btn btn-ghost text-xl font-bold">
+                <i class="fas fa-tachometer-alt mr-2 text-blue-600"></i>
+                Dashboard Admin
+            </a>
+        </div>
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li><a href="#dashboard" class="active">Dashboard</a></li>
+                <li><a href="#candidats">Candidats</a></li>
+                <li><a href="#electeurs">Électeurs</a></li>
+                <li><a href="#votes">Votes</a></li>
+                <li><a href="#parametres">Paramètres</a></li>
+            </ul>
+        </div>
+        <div class="navbar-end">
+            <div class="dropdown dropdown-end">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                    <div class="w-10 rounded-full bg-blue-600 flex items-center justify-center">
+                        <i class="fas fa-user text-white"></i>
+                    </div>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a href="index.html"><i class="fas fa-sign-out-alt mr-2"></i>Déconnexion</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="container mx-auto px-4 py-8">
+        <!-- En-tête avec statistiques -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">
+                <i class="fas fa-chart-line mr-3 text-blue-600"></i>
+                Tableau de Bord
+            </h1>
+            <p class="text-gray-600">Gérez votre plateforme de vote en temps réel</p>
+        </div>
+
+        <!-- Statistiques principales -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="custom-card rounded-2xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm font-medium">Total Votes</p>
+                        <p class="text-3xl font-bold text-blue-600" id="total-votes-admin">0</p>
+                    </div>
+                    <div class="icon-wrapper bg-blue-100">
+                        <i class="fas fa-vote-yea text-blue-600 text-2xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-green-600 text-sm font-medium">
+                        <i class="fas fa-arrow-up mr-1"></i>
+                        +12% depuis hier
+                    </span>
+                </div>
+            </div>
+
+            <div class="custom-card rounded-2xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm font-medium">Candidats</p>
+                        <p class="text-3xl font-bold text-green-600" id="total-candidates-admin">0</p>
+                    </div>
+                    <div class="icon-wrapper bg-green-100">
+                        <i class="fas fa-users text-green-600 text-2xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-blue-600 text-sm font-medium">
+                        <i class="fas fa-plus mr-1"></i>
+                        Ajouter candidat
+                    </span>
+                </div>
+            </div>
+
+            <div class="custom-card rounded-2xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm font-medium">Électeurs</p>
+                        <p class="text-3xl font-bold text-purple-600" id="total-voters-admin">0</p>
+                    </div>
+                    <div class="icon-wrapper bg-purple-100">
+                        <i class="fas fa-user-check text-purple-600 text-2xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-purple-600 text-sm font-medium">
+                        <i class="fas fa-eye mr-1"></i>
+                        Voir détails
+                    </span>
+                </div>
+            </div>
+
+            <div class="custom-card rounded-2xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm font-medium">Participation</p>
+                        <p class="text-3xl font-bold text-orange-600" id="participation-admin">0%</p>
+                    </div>
+                    <div class="icon-wrapper bg-orange-100">
+                        <i class="fas fa-chart-pie text-orange-600 text-2xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-orange-600 text-sm font-medium">
+                        <i class="fas fa-trending-up mr-1"></i>
+                        En temps réel
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions rapides -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <button class="btn btn-gradient pulse-hover" onclick="openModal('add-candidate-modal')">
+                <i class="fas fa-user-plus mr-2"></i>
+                Ajouter Candidat
+            </button>
+            <button class="btn btn-outline btn-primary pulse-hover" onclick="openModal('add-voter-modal')">
+                <i class="fas fa-user-check mr-2"></i>
+                Ajouter Électeur
+            </button>
+            <button class="btn btn-outline btn-success pulse-hover" onclick="showResults()">
+                <i class="fas fa-chart-bar mr-2"></i>
+                Voir Résultats
+            </button>
+            <button class="btn btn-outline btn-warning pulse-hover" onclick="exportData()">
+                <i class="fas fa-download mr-2"></i>
+                Exporter Données
+            </button>
+        </div>
+
+        <!-- Graphiques et tableaux -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Graphique des votes -->
+            <div class="custom-card rounded-2xl p-6">
+                <h3 class="text-xl font-bold mb-4">
+                    <i class="fas fa-chart-line mr-2 text-blue-600"></i>
+                    Évolution des Votes
+                </h3>
+                <canvas id="votes-chart" width="400" height="200"></canvas>
+            </div>
+
+            <!-- Répartition par candidat -->
+            <div class="custom-card rounded-2xl p-6">
+                <h3 class="text-xl font-bold mb-4">
+                    <i class="fas fa-chart-pie mr-2 text-green-600"></i>
+                    Répartition des Votes
+                </h3>
+                <canvas id="candidates-chart" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+        <!-- Tableaux de gestion -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Gestion des candidats -->
+            <div class="custom-card rounded-2xl p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold">
+                        <i class="fas fa-users mr-2 text-blue-600"></i>
+                        Candidats
+                    </h3>
+                    <button class="btn btn-sm btn-primary" onclick="openModal('add-candidate-modal')">
+                        <i class="fas fa-plus mr-1"></i>
+                        Ajouter
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="table table-zebra w-full">
+                        <thead>
+                            <tr>
+                                <th>Photo</th>
+                                <th>Nom</th>
+                                <th>Parti</th>
+                                <th>Votes</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="candidates-table">
+                            <!-- Les candidats seront ajoutés dynamiquement -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Gestion des électeurs -->
+            <div class="custom-card rounded-2xl p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold">
+                        <i class="fas fa-user-check mr-2 text-green-600"></i>
+                        Électeurs
+                    </h3>
+                    <button class="btn btn-sm btn-success" onclick="openModal('add-voter-modal')">
+                        <i class="fas fa-plus mr-1"></i>
+                        Ajouter
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="table table-zebra w-full">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nom</th>
+                                <th>Email</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="voters-table">
+                            <!-- Les électeurs seront ajoutés dynamiquement -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Ajouter Candidat -->
+    <dialog id="add-candidate-modal" class="modal">
+        <div class="modal-box modal-box-custom max-w-2xl">
+            <h3 class="font-bold text-lg mb-4">
+                <i class="fas fa-user-plus mr-2 text-blue-600"></i>
+                Ajouter un Candidat
+            </h3>
+            <form id="add-candidate-form" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="label">
+                            <span class="label-text font-medium">Nom complet</span>
+                        </label>
+                        <input type="text" name="name" class="input input-bordered w-full" required>
+                    </div>
+                    <div>
+                        <label class="label">
+                            <span class="label-text font-medium">Parti politique</span>
+                        </label>
+                        <input type="text" name="party" class="input input-bordered w-full" required>
+                    </div>
+                </div>
+                <div>
+                    <label class="label">
+                        <span class="label-text font-medium">Description</span>
+                    </label>
+                    <textarea name="description" class="textarea textarea-bordered w-full h-24" placeholder="Décrivez le candidat..."></textarea>
+                </div>
+                <div>
+                    <label class="label">
+                        <span class="label-text font-medium">Photo (URL)</span>
+                    </label>
+                    <input type="url" name="photo" class="input input-bordered w-full" placeholder="https://...">
+                </div>
+                <div class="modal-action">
+                    <button type="button" class="btn" onclick="closeModal('add-candidate-modal')">Annuler</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save mr-2"></i>
+                        Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+
+    <!-- Modal Ajouter Électeur -->
+    <dialog id="add-voter-modal" class="modal">
+        <div class="modal-box modal-box-custom max-w-2xl">
+            <h3 class="font-bold text-lg mb-4">
+                <i class="fas fa-user-check mr-2 text-green-600"></i>
+                Ajouter un Électeur
+            </h3>
+            <form id="add-voter-form" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="label">
+                            <span class="label-text font-medium">Nom complet</span>
+                        </label>
+                        <input type="text" name="name" class="input input-bordered w-full" required>
+                    </div>
+                    <div>
+                        <label class="label">
+                            <span class="label-text font-medium">Email</span>
+                        </label>
+                        <input type="email" name="email" class="input input-bordered w-full" required>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="label">
+                            <span class="label-text font-medium">Numéro d'identification</span>
+                        </label>
+                        <input type="text" name="id-number" class="input input-bordered w-full" required>
+                    </div>
+                    <div>
+                        <label class="label">
+                            <span class="label-text font-medium">Téléphone</span>
+                        </label>
+                        <input type="tel" name="phone" class="input input-bordered w-full">
+                    </div>
+                </div>
+                <div>
+                    <label class="label">
+                        <span class="label-text font-medium">Adresse</span>
+                    </label>
+                    <textarea name="address" class="textarea textarea-bordered w-full h-20" placeholder="Adresse complète..."></textarea>
+                </div>
+                <div class="modal-action">
+                    <button type="button" class="btn" onclick="closeModal('add-voter-modal')">Annuler</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save mr-2"></i>
+                        Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+
+    <!-- Notifications -->
+    <div id="notification-container" class="fixed top-4 right-4 z-50 space-y-2">
+        <!-- Les notifications seront ajoutées dynamiquement -->
+    </div>
+
+    <!-- Scripts JavaScript -->
+    <script src="js/admin-dashboard.js"></script>
+</body>
+</html>
+

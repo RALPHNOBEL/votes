@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plateforme de Vote en Ligne</title>
+
+  <!-- Tailwind CSS & DaisyUI -->
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .hero {
+      background: linear-gradient(to right, #1e3a8a, #2563eb);
+    }
+    .btn-gradient {
+      background: linear-gradient(90deg, #f59e0b, #f97316);
+      border: none;
+      color: white;
+      transition: 0.3s;
+    }
+    .btn-gradient:hover {
+      transform: scale(1.05);
+    }
+    .fade-in {
+      animation: fadeIn 1s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <!-- Navbar -->
+  <div class="navbar bg-blue-800 fixed top-0 z-50">
+    <div class="navbar-start">
+      <a class="btn btn-ghost text-xl text-white font-bold">
+        <i class="fas fa-vote-yea mr-2"></i> VoteSchool
+      </a>
+    </div>
+    <div class="navbar-center hidden lg:flex">
+      <ul class="menu menu-horizontal px-1 text-white">
+        <li><a href="accueil" class="hover:bg-white hover:bg-opacity-20">Accueil</a></li>
+        <li><a href="vote" class="hover:bg-white hover:bg-opacity-20">Voter</a></li>
+        <li><a href="resultats" class="hover:bg-white hover:bg-opacity-20">Résultats</a></li>
+      </ul>
+    </div>
+    <div class="navbar-end">
+      <a href="admin-login.html" class="btn btn-outline btn-sm text-white border-white hover:bg-white hover:text-blue-800">
+        <i class="fas fa-user-shield mr-2"></i> Admin
+      </a>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <section id="accueil" class="hero min-h-screen flex items-center justify-center text-white pt-20">
+    <div class="text-center max-w-2xl fade-in">
+      <h1 class="text-5xl md:text-6xl font-bold mb-6">
+        <i class="fas fa-vote-yea text-yellow-300 mr-3"></i>
+        Plateforme de Vote Scolaire
+      </h1>
+      <p class="text-lg md:text-xl mb-8 opacity-90">
+        Participez aux élections de votre établissement en toute sécurité et transparence.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="voter-login.html" class="btn btn-gradient btn-lg">
+          <i class="fas fa-check-circle mr-2"></i> Commencer à Voter
+        </a>
+        <a href="#info" class="btn btn-outline btn-lg text-white border-white hover:bg-white hover:text-blue-800">
+          <i class="fas fa-info-circle mr-2"></i> En savoir plus
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Étapes -->
+  <section id="info" class="py-20 bg-white">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold mb-4 text-gray-800">Comment ça marche ?</h2>
+        <p class="text-gray-600">Un processus simple et sécurisé en 3 étapes</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="p-6 rounded-xl shadow-md text-center bg-gray-50">
+          <i class="fas fa-user-check text-blue-600 text-3xl mb-4"></i>
+          <h3 class="text-xl font-bold mb-2">1. Connexion</h3>
+          <p class="text-gray-600">Authentifiez-vous avec vos identifiants.</p>
+        </div>
+        <div class="p-6 rounded-xl shadow-md text-center bg-gray-50">
+          <i class="fas fa-vote-yea text-green-600 text-3xl mb-4"></i>
+          <h3 class="text-xl font-bold mb-2">2. Voter</h3>
+          <p class="text-gray-600">Choisissez votre candidat préféré.</p>
+        </div>
+        <div class="p-6 rounded-xl shadow-md text-center bg-gray-50">
+          <i class="fas fa-shield-alt text-red-600 text-3xl mb-4"></i>
+          <h3 class="text-xl font-bold mb-2">3. Confirmation</h3>
+          <p class="text-gray-600">Votre vote est sécurisé et anonyme.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="py-20 bg-gradient-to-r from-blue-800 to-blue-600 text-white">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold mb-4">Statistiques en Temps Réel</h2>
+        <p class="opacity-80">Suivez l’évolution du scrutin</p>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+        <div>
+          <h3 class="text-4xl font-bold" id="total-votes">0</h3>
+          <p class="opacity-80">Votes</p>
+        </div>
+        <div>
+          <h3 class="text-4xl font-bold" id="total-candidates">0</h3>
+          <p class="opacity-80">Candidats</p>
+        </div>
+        <div>
+          <h3 class="text-4xl font-bold" id="total-voters">0</h3>
+          <p class="opacity-80">Électeurs</p>
+        </div>
+        <div>
+          <h3 class="text-4xl font-bold" id="participation-rate">0%</h3>
+          <p class="opacity-80">Participation</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer footer-center p-10 bg-gray-100 text-gray-700">
+    <div>
+      <div class="grid grid-flow-col gap-4">
+        <a class="link link-hover">À propos</a>
+        <a class="link link-hover">Contact</a>
+        <a class="link link-hover">Aide</a>
+        <a class="link link-hover">Conditions</a>
+      </div>
+    </div>
+    <div>
+      <div class="grid grid-flow-col gap-4">
+        <a href="#"><i class="fab fa-twitter text-xl hover:text-blue-600"></i></a>
+        <a href="#"><i class="fab fa-facebook text-xl hover:text-blue-600"></i></a>
+        <a href="#"><i class="fab fa-linkedin text-xl hover:text-blue-600"></i></a>
+      </div>
+    </div>
+    <div>
+      <p>© 2025 - Plateforme de Vote Scolaire</p>
+    </div>
+  </footer>
+
+</body>
+</html>

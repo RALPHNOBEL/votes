@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion Électeur - Plateforme de Vote</title>
+    
+    <!-- DaisyUI et Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Styles personnalisés -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <div class="navbar navbar-custom">
+        <div class="navbar-start">
+            <a href="index.html" class="btn btn-ghost text-xl text-white font-bold">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Retour
+            </a>
+        </div>
+        <div class="navbar-center">
+            <a class="btn btn-ghost text-xl text-white font-bold">
+                <i class="fas fa-vote-yea mr-2"></i>
+                Connexion Électeur
+            </a>
+        </div>
+        <div class="navbar-end">
+            <a href="admin-login.html" class="btn btn-outline btn-sm text-white border-white hover:bg-white hover:text-blue-600">
+                <i class="fas fa-user-shield mr-2"></i>
+                Admin
+            </a>
+        </div>
+    </div>
+
+    <!-- Section de connexion -->
+    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <div class="custom-card rounded-2xl p-8 fade-in">
+                <!-- En-tête -->
+                <div class="text-center mb-8">
+                    <div class="icon-wrapper mx-auto mb-4 w-16 h-16 bg-green-100">
+                        <i class="fas fa-user-check text-green-600 text-3xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-2">
+                        Accès Électeur
+                    </h2>
+                    <p class="text-gray-600">
+                        Connectez-vous pour exercer votre droit de vote
+                    </p>
+                </div>
+
+                <!-- Formulaire de connexion -->
+                <form id="voter-login-form" class="space-y-6">
+                    <!-- Numéro d'identification -->
+                    <div>
+                        <label for="voter-id" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-id-card mr-2"></i>
+                            Numéro d'identification
+                        </label>
+                        <input 
+                            id="voter-id" 
+                            name="voter-id" 
+                            type="text" 
+                            required 
+                            class="input input-bordered form-control-custom w-full"
+                            placeholder="Entrez votre numéro d'identification"
+                        >
+                    </div>
+
+                    <!-- Code d'accès -->
+                    <div>
+                        <label for="access-code" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-key mr-2"></i>
+                            Code d'accès
+                        </label>
+                        <div class="relative">
+                            <input 
+                                id="access-code" 
+                                name="access-code" 
+                                type="password" 
+                                required 
+                                class="input input-bordered form-control-custom w-full pr-12"
+                                placeholder="Code d'accès fourni"
+                            >
+                            <button 
+                                type="button" 
+                                id="toggle-access-code"
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center"
+                            >
+                                <i class="fas fa-eye text-gray-400 hover:text-gray-600"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Date de naissance (vérification) -->
+                    <div>
+                        <label for="birth-date" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-calendar mr-2"></i>
+                            Date de naissance
+                        </label>
+                        <input 
+                            id="birth-date" 
+                            name="birth-date" 
+                            type="date" 
+                            required 
+                            class="input input-bordered form-control-custom w-full"
+                        >
+                    </div>
+
+                    <!-- Captcha simple -->
+                    <div>
+                        <label for="captcha" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-shield-alt mr-2"></i>
+                            Vérification de sécurité
+                        </label>
+                        <div class="flex items-center space-x-4">
+                            <div class="bg-gray-100 p-3 rounded-lg font-mono text-lg" id="captcha-question">
+                                5 + 3 = ?
+                            </div>
+                            <input 
+                                id="captcha" 
+                                name="captcha" 
+                                type="number" 
+                                required 
+                                class="input input-bordered form-control-custom w-20"
+                                placeholder="?"
+                            >
+                            <button type="button" id="refresh-captcha" class="btn btn-ghost btn-sm">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Conditions -->
+                    <div class="flex items-start">
+                        <input 
+                            id="accept-terms" 
+                            name="accept-terms" 
+                            type="checkbox" 
+                            required
+                            class="checkbox checkbox-primary checkbox-sm mt-1"
+                        >
+                        <label for="accept-terms" class="ml-3 block text-sm text-gray-700">
+                            J'accepte les <a href="#" class="link link-primary">conditions d'utilisation</a> 
+                            et je confirme que je n'ai pas encore voté pour cette élection.
+                        </label>
+                    </div>
+
+                    <!-- Bouton de connexion -->
+                    <div>
+                        <button 
+                            type="submit" 
+                            class="btn btn-gradient w-full pulse-hover"
+                        >
+                            <i class="fas fa-sign-in-alt mr-2"></i>
+                            Accéder au Vote
+                        </button>
+                    </div>
+
+                    <!-- Alerte d'erreur -->
+                    <div id="error-alert" class="alert alert-error alert-custom hidden">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span id="error-message">Identifiants incorrects</span>
+                    </div>
+
+                    <!-- Alerte de succès -->
+                    <div id="success-alert" class="alert alert-success alert-custom hidden">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Connexion réussie ! Redirection vers le vote...</span>
+                    </div>
+                </form>
+
+                <!-- Aide -->
+                <div class="mt-8 text-center">
+                    <p class="text-sm text-gray-600">
+                        Besoin d'aide ? 
+                        <a href="#" class="link link-primary">Contactez le support</a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Informations importantes -->
+            <div class="custom-card rounded-2xl p-6 mt-6">
+                <h3 class="font-bold text-lg mb-4 text-center">
+                    <i class="fas fa-info-circle mr-2 text-blue-600"></i>
+                    Informations Importantes
+                </h3>
+                <div class="space-y-3 text-sm">
+                    <div class="flex items-start">
+                        <i class="fas fa-check text-green-600 mt-1 mr-3"></i>
+                        <p>Vous ne pouvez voter qu'une seule fois par élection</p>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fas fa-lock text-blue-600 mt-1 mr-3"></i>
+                        <p>Votre vote est secret et sécurisé</p>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fas fa-clock text-orange-600 mt-1 mr-3"></i>
+                        <p>Vous avez 10 minutes pour compléter votre vote</p>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fas fa-eye-slash text-purple-600 mt-1 mr-3"></i>
+                        <p>Votre identité reste anonyme</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistiques de participation -->
+            <div class="grid grid-cols-2 gap-4 mt-6">
+                <div class="stat-custom text-center p-4">
+                    <div class="stat-value text-white text-2xl font-bold" id="current-participation">0%</div>
+                    <div class="stat-title text-white opacity-70 text-xs">Participation</div>
+                </div>
+                <div class="stat-custom text-center p-4">
+                    <div class="stat-value text-white text-2xl font-bold" id="time-remaining">24h</div>
+                    <div class="stat-title text-white opacity-70 text-xs">Temps Restant</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loader -->
+    <div id="loader" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-8 rounded-2xl text-center">
+            <div class="loader mx-auto mb-4"></div>
+            <p class="text-gray-600">Vérification des identifiants...</p>
+        </div>
+    </div>
+
+    <!-- Script JavaScript -->
+    <script src="js/voter-login.js"></script>
+</body>
+</html>
+

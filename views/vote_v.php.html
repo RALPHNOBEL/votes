@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plateforme de Vote - Candidats</title>
+    <link rel="stylesheet" href="assets/style/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🗳️ Élections coopérative 2025</h1>
+            <p>Choisissez votre candidat pour l'avenir de notre établissement</p>
+        </div>
+
+        <div class="election-info">
+            <div>
+                <h3>📅 Date limite de vote</h3>
+                <p>Dimanche 15 septembre 2025 à 20h00</p>
+            </div>
+            <div class="time-remaining">
+                ⏰ Temps restant: 31 jours 14h 25min
+            </div>
+        </div>
+
+        <div class="candidates-grid">
+            <div class="candidate-card">
+                <div class="candidate-header">
+                    <div class="candidate-photo"><img src="assets/img/61gH2bMfHJL._SX450_CR0,0,450,450_.jpg" alt=""></div>
+                    <div class="candidate-info">
+                        <h3>Alice Martin</h3>
+                        <div class="candidate-party">Parti Écologiste</div>
+                    </div>
+                </div>
+                <div class="candidate-program">
+                    <p><strong>Programme :</strong> Pour un etablissement durable et inclusif</p>
+                    <ul class="program-points">
+                        <li>Développement des transports en commun</li>
+                        <li>Création d'espaces verts </li>
+                        <li>Soutien aux commerces locaux</li>
+                        <li>Batiments écologiques</li>
+                    </ul>
+                </div>
+                <button class="vote-button" onclick="openVoteModal('Alice Martin')">
+                    Voter pour Alice Martin
+                </button>
+            </div>
+
+            <div class="candidate-card">
+                <div class="candidate-header">
+                    <div class="candidate-photo"><img src="assets/img/depositphotos_272484620-stock-photo-cheerful-african-american-man-grey.jpg" alt=""></div>
+                    <div class="candidate-info">
+                        <h3>Jean Dubois</h3>
+                        <div class="candidate-party">Mouvement Citoyen</div>
+                    </div>
+                </div>
+                <div class="candidate-program">
+                    <p><strong>Programme :</strong> Renouveau économique et social</p>
+                    <ul class="program-points">
+                        <li>Attractivité économique renforcée</li>
+                        <li>Rénovation du site</li>
+                        <li>Services  modernisés</li>
+                        <li>Sécurité et proximité</li>
+                    </ul>
+                </div>
+                <button class="vote-button" onclick="openVoteModal('Jean Dubois')">
+                    Voter pour Jean Dubois
+                </button>
+            </div>
+
+            <div class="candidate-card">
+                <div class="candidate-header">
+                    <div class="candidate-photo"><img src="C:\Users\THINK\Desktop\STARTECH\essai\61gH2bMfHJL._SX450_CR0,0,450,450_.jpg" alt=""></div>
+                    <div class="candidate-info">
+                        <h3>Steeve Leroux</h3>
+                        <div class="candidate-party">Union Démocratique</div>
+                    </div>
+                </div>
+                <div class="candidate-program">
+                    <p><strong>Programme :</strong> Innovation et solidarité</p>
+                    <ul class="program-points">
+                        <li>site connectée et numérique</li>
+                        <li>Éducation et jeunesse prioritaires</li>
+                        <li>Aide aux seniors et familles</li>
+                        <li>Culture et patrimoine valorisés</li>
+                    </ul>
+                </div>
+                <button class="vote-button" onclick="openVoteModal('Sophie Leroux')">
+                    Voter pour Sophie Leroux
+                </button>
+            </div>
+
+            <div class="candidate-card">
+                <div class="candidate-header">
+                    <div class="candidate-photo"><img src="C:\Users\THINK\Desktop\STARTECH\essai\depositphotos_272484620-stock-photo-cheerful-african-american-man-grey.jpg" alt=""></div>
+                    <div class="candidate-info">
+                        <h3>Pierre Moreau</h3>
+                        <div class="candidate-party">Alliance </div>
+                    </div>
+                </div>
+                <div class="candidate-program">
+                    <p><strong>Programme :</strong> Tradition et modernité</p>
+                    <ul class="program-points">
+                        <li>Développement économique local</li>
+                        <li>Préservation du patrimoine</li>
+                        <li>Sécurité renforcée</li>
+                        <li>Fraude maîtrisée</li>
+                    </ul>
+                </div>
+                <button class="vote-button" onclick="openVoteModal('Pierre Moreau')">
+                    Voter pour Pierre Moreau
+                </button>
+            </div>
+        </div>
+
+        <div id="voteConfirmation" class="vote-confirmation">
+            ✅ Votre vote a été enregistré avec succès ! Merci de votre participation .
+        </div>
+
+        <div class="security-info">
+            <h3>🔒 Sécurité et confidentialité</h3>
+            <p>Votre vote est anonyme, crypté et sécurisé. Chaque citoyen ne peut voter qu'une seule fois. Cette plateforme respecte les normes de sécurité les plus strictes pour garantir l'intégrité du processus démocratique.</p>
+        </div>
+
+        <div class="footer">
+            <p>© 2025 Plateforme de Vote Sécurisée - Ville de [Douala]</p>
+            <p>En cas de problème technique, contactez le support : Jeunetech@gmail.cm</p>
+        </div>
+    </div>
+
+    <!-- Modal de confirmation -->
+    <div id="voteModal" class="modal">
+        <div class="modal-content">
+            <h3>Confirmer votre vote</h3>
+            <p>Vous êtes sur le point de voter pour :</p>
+            <h4 id="selectedCandidate"></h4>
+            <p><strong>⚠️ Attention :</strong> Ce vote est définitif et ne peut pas être modifié.</p>
+            <div class="modal-buttons">
+                <button class="btn-confirm" onclick="confirmVote()">Confirmer mon vote</button>
+                <button class="btn-cancel" onclick="closeVoteModal()">Annuler</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedCandidate = '';
+        let hasVoted = false;
+
+        function openVoteModal(candidate) {
+            if (hasVoted) {
+                alert('Vous avez déjà voté !');
+                return;
+            }
+            
+            selectedCandidate = candidate;
+            document.getElementById('selectedCandidate').textContent = candidate;
+            document.getElementById('voteModal').style.display = 'block';
+        }
+
+        function closeVoteModal() {
+            document.getElementById('voteModal').style.display = 'none';
+        }
+
+        function confirmVote() {
+            // Simuler l'enregistrement du vote
+            setTimeout(() => {
+                hasVoted = true;
+                closeVoteModal();
+                
+                // Mettre à jour l'interface
+                const buttons = document.querySelectorAll('.vote-button');
+                buttons.forEach(button => {
+                    if (button.textContent.includes(selectedCandidate)) {
+                        button.textContent = '✓ Vote enregistré';
+                        button.classList.add('voted');
+                        button.disabled = true;
+                    } else {
+                        button.textContent = 'Non sélectionné';
+                        button.style.opacity = '0.5';
+                        button.disabled = true;
+                    }
+                });
+                
+                document.getElementById('voteConfirmation').style.display = 'block';
+                
+                // Scroll vers la confirmation
+                document.getElementById('voteConfirmation').scrollIntoView({ 
+                    behavior: 'smooth' 
+                });
+            }, 1000);
+        }
+
+        // Fermer la modal si on clique en dehors
+        window.onclick = function(event) {
+            const modal = document.getElementById('voteModal');
+            if (event.target == modal) {
+                closeVoteModal();
+            }
+        }
+
+        // Simuler le décompte en temps réel
+        function updateCountdown() {
+            const timeElement = document.querySelector('.time-remaining');
+            // Ici on pourrait intégrer un vrai décompte en temps réel
+            // Pour la démo, on garde le texte statique
+        }
+
+        // Animation d'entrée pour les cartes
+        window.addEventListener('load', () => {
+            const cards = document.querySelectorAll('.candidate-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html>

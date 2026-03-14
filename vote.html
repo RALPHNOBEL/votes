@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interface de Vote - Plateforme de Vote</title>
+    
+    <!-- DaisyUI et Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Styles personnalisés -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <div class="navbar bg-white shadow-lg">
+        <div class="navbar-start">
+            <a class="btn btn-ghost text-xl font-bold">
+                <i class="fas fa-vote-yea mr-2 text-blue-600"></i>
+                Interface de Vote
+            </a>
+        </div>
+        <div class="navbar-center">
+            <div class="flex items-center space-x-4">
+                <div class="badge badge-success">
+                    <i class="fas fa-user-check mr-1"></i>
+                    Connecté
+                </div>
+                <div class="countdown font-mono text-2xl">
+                    <span style="--value:10;"></span>:
+                    <span style="--value:00;"></span>
+                </div>
+                <span class="text-sm text-gray-600">minutes restantes</span>
+            </div>
+        </div>
+        <div class="navbar-end">
+            <button class="btn btn-outline btn-error btn-sm" onclick="confirmLogout()">
+                <i class="fas fa-sign-out-alt mr-2"></i>
+                Quitter
+            </button>
+        </div>
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="container mx-auto px-4 py-8">
+        <!-- En-tête -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800 mb-4">
+                <i class="fas fa-ballot-check mr-3 text-blue-600"></i>
+                Élection Présidentielle 2024
+            </h1>
+            <p class="text-lg text-gray-600 mb-2">
+                Choisissez votre candidat préféré en cliquant sur sa carte
+            </p>
+            <div class="flex justify-center items-center space-x-4 text-sm text-gray-500">
+                <span><i class="fas fa-shield-alt mr-1"></i>Vote sécurisé</span>
+                <span><i class="fas fa-eye-slash mr-1"></i>Anonyme</span>
+                <span><i class="fas fa-lock mr-1"></i>Chiffré</span>
+            </div>
+        </div>
+
+        <!-- Barre de progression -->
+        <div class="mb-8">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-sm font-medium text-gray-700">Progression du vote</span>
+                <span class="text-sm text-gray-500" id="progress-text">Étape 1 sur 3</span>
+            </div>
+            <div class="progress progress-custom w-full">
+                <div class="progress-bar-custom" style="width: 33%" id="progress-bar"></div>
+            </div>
+        </div>
+
+        <!-- Section de sélection des candidats -->
+        <div id="candidates-section" class="mb-8">
+            <h2 class="text-2xl font-bold text-center mb-6">
+                <i class="fas fa-users mr-2 text-green-600"></i>
+                Sélectionnez votre candidat
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="candidates-grid">
+                <!-- Les candidats seront ajoutés dynamiquement -->
+            </div>
+        </div>
+
+        <!-- Section de confirmation -->
+        <div id="confirmation-section" class="hidden mb-8">
+            <div class="custom-card rounded-2xl p-8 max-w-2xl mx-auto">
+                <h2 class="text-2xl font-bold text-center mb-6">
+                    <i class="fas fa-check-circle mr-2 text-orange-600"></i>
+                    Confirmez votre choix
+                </h2>
+                
+                <div id="selected-candidate-display" class="text-center mb-6">
+                    <!-- Le candidat sélectionné sera affiché ici -->
+                </div>
+                
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                    <div class="flex items-start">
+                        <i class="fas fa-exclamation-triangle text-yellow-600 mt-1 mr-3"></i>
+                        <div class="text-sm text-yellow-800">
+                            <p class="font-medium mb-1">Attention !</p>
+                            <p>Une fois votre vote confirmé, vous ne pourrez plus le modifier. Assurez-vous de votre choix avant de continuer.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex justify-center space-x-4">
+                    <button class="btn btn-outline btn-lg" onclick="goBackToSelection()">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Retour
+                    </button>
+                    <button class="btn btn-success btn-lg pulse-hover" onclick="confirmVote()">
+                        <i class="fas fa-check mr-2"></i>
+                        Confirmer mon vote
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section de finalisation -->
+        <div id="final-section" class="hidden mb-8">
+            <div class="custom-card rounded-2xl p-8 max-w-2xl mx-auto text-center">
+                <div class="mb-6">
+                    <div class="icon-wrapper mx-auto mb-4 w-20 h-20 bg-green-100">
+                        <i class="fas fa-check-circle text-green-600 text-4xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-green-600 mb-2">
+                        Vote enregistré !
+                    </h2>
+                    <p class="text-lg text-gray-600">
+                        Merci d'avoir participé à cette élection
+                    </p>
+                </div>
+                
+                <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+                    <div class="text-sm text-green-800">
+                        <p class="font-medium mb-2">Votre vote a été enregistré avec succès</p>
+                        <p>Numéro de confirmation : <span class="font-mono font-bold" id="confirmation-number"></span></p>
+                        <p>Date et heure : <span id="vote-timestamp"></span></p>
+                    </div>
+                </div>
+                
+                <div class="flex justify-center space-x-4">
+                    <button class="btn btn-outline btn-lg" onclick="downloadReceipt()">
+                        <i class="fas fa-download mr-2"></i>
+                        Télécharger reçu
+                    </button>
+                    <a href="results.html" class="btn btn-primary btn-lg">
+                        <i class="fas fa-chart-bar mr-2"></i>
+                        Voir les résultats
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informations de sécurité -->
+        <div class="custom-card rounded-2xl p-6 max-w-4xl mx-auto">
+            <h3 class="font-bold text-lg mb-4 text-center">
+                <i class="fas fa-shield-alt mr-2 text-blue-600"></i>
+                Sécurité et Confidentialité
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                <div class="text-center">
+                    <div class="icon-wrapper mx-auto mb-2 bg-blue-100">
+                        <i class="fas fa-lock text-blue-600"></i>
+                    </div>
+                    <p class="font-medium">Chiffrement SSL</p>
+                    <p class="text-gray-600">Toutes les données sont chiffrées</p>
+                </div>
+                <div class="text-center">
+                    <div class="icon-wrapper mx-auto mb-2 bg-green-100">
+                        <i class="fas fa-user-secret text-green-600"></i>
+                    </div>
+                    <p class="font-medium">Anonymat garanti</p>
+                    <p class="text-gray-600">Votre identité reste secrète</p>
+                </div>
+                <div class="text-center">
+                    <div class="icon-wrapper mx-auto mb-2 bg-purple-100">
+                        <i class="fas fa-database text-purple-600"></i>
+                    </div>
+                    <p class="font-medium">Stockage sécurisé</p>
+                    <p class="text-gray-600">Données protégées</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmation de sortie -->
+    <dialog id="logout-modal" class="modal">
+        <div class="modal-box modal-box-custom">
+            <h3 class="font-bold text-lg mb-4">
+                <i class="fas fa-exclamation-triangle mr-2 text-orange-600"></i>
+                Confirmer la sortie
+            </h3>
+            <p class="mb-4">
+                Êtes-vous sûr de vouloir quitter ? Votre vote ne sera pas enregistré si vous n'avez pas terminé le processus.
+            </p>
+            <div class="modal-action">
+                <button class="btn" onclick="closeModal('logout-modal')">Annuler</button>
+                <a href="index.html" class="btn btn-error">
+                    <i class="fas fa-sign-out-alt mr-2"></i>
+                    Quitter
+                </a>
+            </div>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+
+    <!-- Modal de chargement -->
+    <dialog id="loading-modal" class="modal">
+        <div class="modal-box modal-box-custom text-center">
+            <div class="loader mx-auto mb-4"></div>
+            <h3 class="font-bold text-lg mb-2">Enregistrement du vote...</h3>
+            <p class="text-gray-600">Veuillez patienter, ne fermez pas cette page.</p>
+        </div>
+    </dialog>
+
+    <!-- Notifications -->
+    <div id="notification-container" class="fixed top-4 right-4 z-50 space-y-2">
+        <!-- Les notifications seront ajoutées dynamiquement -->
+    </div>
+
+    <!-- Scripts JavaScript -->
+    <script src="js/vote.js"></script>
+</body>
+</html>
+
