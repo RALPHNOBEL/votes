@@ -1,20 +1,25 @@
-<?php
-// Variables Railway (automatiquement disponibles)
-define("DATABASE_HOST", getenv('MYSQLHOST') ?: 'localhost');
-define("DATABASE_PORT", getenv('MYSQLPORT') ?: '3306');
-define("DATABASE_NAME", getenv('MYSQLDATABASE') ?: 'ges_vote');
-define("DATABASE_USER", getenv('MYSQLUSER') ?: 'root');
-define("DATABASE_PASSWORD", getenv('MYSQLPASSWORD') ?: '');
+// Charge le fichier .env.local si on est en local
+if (file_exists(__DIR__ . '/.env.local')) {
+    $lines = file(__DIR__ . '/.env.local', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        putenv($line);
+    }
+}
+
+$host = getenv('MYSQLHOST');
+$port = getenv('MYSQLPORT');
+$db   = getenv('MYSQLDATABASE');
+$user = getenv('MYSQLUSER');
+$pass = getenv('MYSQLPASSWORD');
 
 try {
-    $db = new PDO(
-        'mysql:host=' . DATABASE_HOST . 
-        ';port=' . DATABASE_PORT . 
-        ';dbname=' . DATABASE_NAME, 
-        DATABASE_USER, 
-        DATABASE_PASSWORD
+    $pdo = new PDO(
+        "mysql:host=$host;port=$port;dbname=$db;charset=utf8",
+        $user,
+        $pass,
+        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
     );
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException $e) {
-    die("Database connection failed: " . $e->getMessage());
+} catch (PDOException $e) {
+    die("Erreur de connexion : " . $e->getMessage());
 }
+```
