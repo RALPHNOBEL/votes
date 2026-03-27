@@ -1,23 +1,13 @@
-FROM php:8.2-fpm-alpine
+FROM php:8.2-apache
 RUN docker-php-ext-install pdo pdo_mysql mysqli
-
-RUN apk add --no-cache nginx
-
-COPY . /var/www/html/
-
-RUN echo 'server { \
-    listen ${PORT}; \
-    root /var/www/html; \
-    index index.php; \
-    location / { \
-        try_files $uri $uri/ /index.php?$query_string; \
-    } \
-    location ~ \.php$ { \
-        fastcgi_pass 127.0.0.1:9000; \
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name; \
-        include fastcgi_params; \
-    } \
-}' > /etc/nginx/http.d/default.conf
-
+RUN a2enmod rewrite
+WORKDIR /var/www/html
+COPY . .
+RUN echo '<Directory /var/www/html>\nAllowOverride All\nRequire all granted\n</Directory>' >> /etc/apache2/apache2.conf
+ENV APACHE_RUN_USER=www-data
+ENV APACHE_RUN_GROUP=www-data
+ENV APACHE_LOG_DIR=/var/log/apache2
+ENV PORT=8080
+RUN sed -i "s/80/${PORT}/g" /etc/apache2/ports.conf /etc/apache2/sites-available/000-default.conf
 EXPOSE 8080
-CMD sh -c "php-fpm -D && nginx -g 'daemon off;'"
+CMD ["apache2-foreground"]
