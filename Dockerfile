@@ -1,6 +1,12 @@
-FROM php:8.2-cli
+FROM php:8.2-apache
 RUN docker-php-ext-install pdo pdo_mysql mysqli
+RUN a2enmod rewrite
 WORKDIR /var/www/html
 COPY . .
+RUN echo '<Directory /var/www/html>\n\
+    AllowOverride All\n\
+    Require all granted\n\
+</Directory>' >> /etc/apache2/apache2.conf
 EXPOSE 8080
-CMD ["sh", "-c", "php -S 0.0.0.0:${PORT:-8080} -t /var/www/html router.php"]
+RUN sed -i 's/80/${PORT}/g' /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
+CMD ["apache2-foreground"]
