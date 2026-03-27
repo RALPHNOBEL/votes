@@ -13,7 +13,7 @@
     if(isset($_GET['page']) AND !empty($_GET['page'])) {
         $page = trim(strtolower($_GET['page']));
     } else{
-        $page = 'home'; // Page par défaut
+        $page = 'vots'; // Page par défaut
     }
 
     // Tableau des pages
