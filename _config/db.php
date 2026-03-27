@@ -1,6 +1,7 @@
+<?php
 // Charge le fichier .env.local si on est en local
-if (file_exists(__DIR__ . '/.env.local')) {
-    $lines = file(__DIR__ . '/.env.local', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+if (file_exists(__DIR__ . '/../../.env.local')) {
+    $lines = file(__DIR__ . '/../../.env.local', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     foreach ($lines as $line) {
         putenv($line);
     }
@@ -22,4 +23,3 @@ try {
 } catch (PDOException $e) {
     die("Erreur de connexion : " . $e->getMessage());
 }
-```
