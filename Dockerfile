@@ -1,16 +1,11 @@
-FROM php:8.2-apache
+FROM php:8.2-cli
 
-# Désactiver les MPM en conflit et activer le bon
-RUN a2dismod mpm_event mpm_worker 2>/dev/null || true \
-    && a2enmod mpm_prefork rewrite
-
-# Installer les extensions PHP
 RUN docker-php-ext-install pdo pdo_mysql mysqli
 
-# Copier les fichiers du projet
-COPY . /var/www/html/
+WORKDIR /var/www/html
 
-# Permissions
-RUN chmod -R 755 /var/www/html/
+COPY . .
 
 EXPOSE 80
+
+CMD ["php", "-S", "0.0.0.0:80", "-t", "/var/www/html"]
