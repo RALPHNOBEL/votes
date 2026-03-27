@@ -52,12 +52,12 @@
     <div class="navbar-center hidden lg:flex">
       <ul class="menu menu-horizontal px-1 text-white">
         <li><a href="#accueil" class="hover:bg-white hover:bg-opacity-20">Accueil</a></li>
-        <li><a href="<?= PATH ?>?page=voter">class="hover:bg-white hover:bg-opacity-20">Voter</a></li>
-        <li><a href="<?= PATH ?>?page=resultats"> class="hover:bg-white hover:bg-opacity-20">Résultats</a></li>
+        <li><a href="<?= PATH  ?> voter" class="hover:bg-white hover:bg-opacity-20">Voter</a></li>
+        <li><a href="<?= PATH  ?> resultats" class="hover:bg-white hover:bg-opacity-20">Résultats</a></li>
       </ul>
     </div>
     <div class="navbar-end">
-      <a href="<?= PATH ?>?page=inscription"> class="btn btn-outline btn-sm text-white border-white hover:bg-white hover:text-blue-800">
+      <a href=" <?= PATH  ?> inscription" class="btn btn-outline btn-sm text-white border-white hover:bg-white hover:text-blue-800">
         <i class="fas fa-user-shield mr-2"></i> Admin
       </a>
     </div>
@@ -74,7 +74,7 @@
         Participez aux élections de votre établissement en toute sécurité et transparence.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="<?= PATH ?>?page=email"> class="btn btn-gradient btn-lg">
+        <a href="views/email_v.php" class="btn btn-gradient btn-lg">
           <i class="fas fa-check-circle mr-2"></i> Commencer à Voter
         </a>
         <a href="#info" class="btn btn-outline btn-lg text-white border-white hover:bg-white hover:text-blue-800">
