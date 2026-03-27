@@ -4,13 +4,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GesVotes - Plateforme de Vote Électronique</title>
+    <!-- Chronomètre -->
+<?php if($election): ?>
+<div id="timer-container" class="w-full max-w-2xl mx-auto mb-8 text-center">
+    <div style="background: linear-gradient(135deg, #4f46e5, #7c3aed); border-radius:16px; padding:20px; color:white;">
+        <p class="text-sm font-semibold mb-2 opacity-80">
+            <i class="fas fa-clock mr-1"></i> Temps restant pour voter
+        </p>
+        <div id="countdown" style="font-size:36px; font-weight:700; letter-spacing:4px;">
+            --:--:--
+        </div>
+        <p class="text-xs opacity-70 mt-2">
+            Clôture : <?= $election['end_date'] ?> à <?= $election['end_time'] ?>
+        </p>
+    </div>
+</div>
+
+<script>
+    const endDateTime = new Date("<?= $election['end_date'] ?>T<?= $election['end_time'] ?>");
+    
+    function updateCountdown() {
+        const now = new Date();
+        const diff = endDateTime - now;
+        
+        if(diff <= 0) {
+            document.getElementById('countdown').innerHTML = "⛔ Votes clôturés";
+            document.getElementById('countdown').style.fontSize = "20px";
+            // Désactiver tous les boutons de vote
+            document.querySelectorAll('.vote-btn').forEach(btn => {
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+                btn.classList.remove('pulse');
+                btn.innerHTML = '<i class="fas fa-lock mr-2"></i> Votes fermés';
+            });
+            clearInterval(timer);
+            return;
+        }
+        
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        
+        document.getElementById('countdown').innerHTML = 
+            String(hours).padStart(2, '0') + ':' +
+            String(minutes).padStart(2, '0') + ':' +
+            String(seconds).padStart(2, '0');
+        
+        // Changer couleur si moins de 10 minutes
+        if(diff < 10 * 60 * 1000) {
+            document.getElementById('timer-container').querySelector('div').style.background = 
+                'linear-gradient(135deg, #dc2626, #ef4444)';
+        }
+    }
+    
+    updateCountdown();
+    const timer = setInterval(updateCountdown, 1000);
+</script>
+<?php else: ?>
+<div class="w-full max-w-2xl mx-auto mb-8 text-center">
+    <div style="background:#f8d7da; color:#721c24; padding:16px; border-radius:12px;">
+        <i class="fas fa-exclamation-circle mr-2"></i> Aucune élection en cours.
+    </div>
+</div>
+<?php endif; ?>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            font-family: 'Poppins', sans-serif;
-        }
+        * { font-family: 'Poppins', sans-serif; }
         
         .candidate-card {
             transition: all 0.3s ease;
@@ -34,9 +95,7 @@
             box-shadow: 0 6px 10px rgba(79, 70, 229, 0.5);
         }
         
-        .vote-btn:active:not(:disabled) {
-            transform: scale(0.98);
-        }
+        .vote-btn:active:not(:disabled) { transform: scale(0.98); }
         
         .pulse {
             animation: pulse 2s infinite;
@@ -65,7 +124,8 @@
     </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-50 min-h-screen flex flex-col items-center pt-8 pb-16 px-4">
-    <!-- Header avec logo et titre -->
+
+    <!-- Header -->
     <div class="w-full max-w-6xl mb-8">
         <div class="flex items-center justify-center mb-2">
             <div class="w-14 h-14 rounded-full bg-indigo-600 flex items-center justify-center text-white mr-3">
@@ -97,7 +157,8 @@
                 <!-- Photo du candidat -->
                 <div class="relative">
                     <?php if(!empty($candidat['photo'])): ?>
-                        <img src="<?= $candidat['photo'] ?>" alt="<?= $candidat['nom_c'] ?>" 
+                        <img src="<?= PATH ?>assets/img/<?= $candidat['photo'] ?>" 
+                             alt="<?= htmlspecialchars($candidat['nom_c']) ?>" 
                              class="w-full h-60 object-cover">
                     <?php else: ?>
                         <div class="w-full h-60 bg-gradient-to-r from-blue-100 to-indigo-100 flex items-center justify-center">
@@ -105,7 +166,7 @@
                         </div>
                     <?php endif; ?>
                     
-                    <!-- Indicateur visuel si déjà voté -->
+                    <!-- Indicateur si déjà voté -->
                     <?php if($candidateModel->hasVoted($id_el)): ?>
                     <div class="absolute top-4 right-4 bg-indigo-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
                         <i class="fas fa-check mr-1"></i> Déjà voté
@@ -115,7 +176,9 @@
                 
                 <!-- Informations du candidat -->
                 <div class="p-6">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2"><?= $candidat['nom_c'] ?: "Sans nom" ?></h3>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">
+                        <?= htmlspecialchars($candidat['nom_c'] ?: "Sans nom") ?>
+                    </h3>
                     
                     <div class="flex items-center text-sm text-gray-500 mb-4">
                         <i class="fas fa-id-card mr-2"></i>
@@ -123,14 +186,13 @@
                     </div>
                     
                     <p class="text-gray-600 mb-6 leading-relaxed">
-                        <?= !empty($candidat['description']) ? $candidat['description'] : "Ce candidat n'a pas encore fourni de description." ?>
+                        <?= !empty($candidat['description']) ? htmlspecialchars($candidat['description']) : "Ce candidat n'a pas encore fourni de description." ?>
                     </p>
 
                     <form method="post" class="mt-auto">
                         <button type="submit" name="id_c" value="<?= $candidat['id_c'] ?>"
                             <?= ($candidateModel->hasVoted($id_el)) ? "disabled" : "" ?>
                             class="vote-btn w-full text-white font-medium py-3 px-4 rounded-lg flex items-center justify-center <?= ($candidateModel->hasVoted($id_el)) ? 'opacity-50 cursor-not-allowed' : 'pulse' ?>">
-                            
                             <?php if($candidateModel->hasVoted($id_el)): ?>
                                 <i class="fas fa-check-circle mr-2"></i> Déjà voté
                             <?php else: ?>
@@ -142,13 +204,14 @@
             </div>
         <?php endforeach; ?>
     </div>
-                                <!-- Bouton Voir les résultats -->
-<div class="w-full max-w-6xl mb-8 text-center">
-    <a href="/votes/resultats" 
-       class="inline-block bg-gradient-to-r from-indigo-600 to-blue-500 text-white font-semibold py-3 px-6 rounded-lg shadow-lg transform transition-transform hover:scale-105 hover:shadow-xl">
-        <i class="fas fa-chart-bar mr-2"></i> Voir les résultats
-    </a>
-</div>
+
+    <!-- Bouton Voir les résultats -->
+    <div class="w-full max-w-6xl mt-10 mb-8 text-center">
+        <a href="/votes/resultats" 
+           class="inline-block bg-gradient-to-r from-indigo-600 to-blue-500 text-white font-semibold py-3 px-6 rounded-lg shadow-lg transform transition-transform hover:scale-105 hover:shadow-xl">
+            <i class="fas fa-chart-bar mr-2"></i> Voir les résultats
+        </a>
+    </div>
 
     <footer class="mt-12 text-center text-gray-500 text-sm">
         <p>© 2025 GesVotes - Tous droits réservés</p>
@@ -156,7 +219,6 @@
     </footer>
 
     <script>
-
         document.addEventListener('DOMContentLoaded', function() {
             const candidateCards = document.querySelectorAll('.candidate-card');
             

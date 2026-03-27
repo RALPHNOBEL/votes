@@ -11,8 +11,19 @@ if (isset($_POST['add'])){
             echo "<script>alert('Votre email existe deja');</script>";
         }
     }
-    
+    // Validation filière
+    if(!preg_match('/^[a-zA-ZÀ-ÿ\s\-]+$/', $filiere)){
+        $error = "La filière ne doit contenir que des lettres.";
+    } else {
+        $valid = Etudiante::addEtudiante($email, $birthdate, $nom_e, $tel_e, $matricule, $filiere, $niveau, $prenom_e);
+        if($valid){
+            echo "<script>alert('Etudiant ajouté avec succès');</script>";
+        } else {
+            echo "<script>alert('Cet étudiant existe déjà');</script>";
+        }
+    }
 }
+    
 
 $etudiantes = Etudiante::getAllEtudiantes();
     if(isset($_GET['edit'])){

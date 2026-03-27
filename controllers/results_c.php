@@ -12,7 +12,16 @@ $candidates = Vote::getResultsByElection($id_el);
 
 // Calculer le total des votes
 $total_votes = 0;
-foreach($candidates as $c) $total_votes += $c['votes'];
+$max_votes = 0;
+$winner = null;
+
+foreach ($candidates as $c) {
+    $total_votes += $c['votes'];
+    if ($c['votes'] > $max_votes) {
+        $max_votes = $c['votes'];
+        $winner = $c;
+    }
+}
 
 include __DIR__ . '/../views/resultats_v.php';
 ?>

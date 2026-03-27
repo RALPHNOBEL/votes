@@ -378,7 +378,12 @@
                             <td>
                                 <div class="candidate-info">
                                     <div class="candidate-avatar">
-                                        <i class="fas fa-user"></i>
+                                        <?php if(!empty($candidate['photo'])): ?>
+                                            <img src="<?= PATH ?>assets/img/<?= $candidate['photo'] ?>" 
+                                                style="width:50px; height:50px; border-radius:50%; object-fit:cover;">
+                                        <?php else: ?>
+                                            <i class="fas fa-user"></i>
+                                        <?php endif; ?>
                                     </div>
                                     <div class="candidate-details">
                                         <div class="candidate-name"><?= htmlspecialchars($candidate['nom_c']) ?></div>

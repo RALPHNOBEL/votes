@@ -2,44 +2,48 @@
 session_start();
 
 $data = json_decode(file_get_contents('php://input'), true);
-
 if (isset($data['code'])) {
     
+    $code = $data['code'];
+    include_once '../_classes/Etudiante.php';
+    $db = include '../_config/db.php';
+    $GLOBALS['db'] = $db;
 
+    $etudiantModel = new Etudiante($db);
 
-$code = $data['code'];
+    $email = $_SESSION['email'] ?? null;
+    
+    // DEBUG
+    error_log("Email en session: " . ($email ?? 'NULL'));
+    
+    if (!$email) {
+        echo json_encode(['success' => false, 'message' => 'Email non trouvé en session']);
+        exit;
+    }
 
-include_once '../_classes/Etudiante.php';
-$db = include '../_config/db.php';
+    $user = Etudiante::etudian($email);
+    
+    // DEBUG
+    error_log("User trouvé: " . print_r($user, true));
 
-$etudiantModel = new Etudiante($db);
+    if (!$user) {
+        echo json_encode(['success' => false, 'message' => 'Utilisateur introuvable']);
+        exit;
+    }
 
-// On récupère l'email de l'utilisateur stocké dans la session
-$email = $_SESSION['email'] ?? null;
+    $storedCode = $etudiantModel->getCode($user['id_e']);
+    
+    // DEBUG
+    error_log("storedCode: " . print_r($storedCode, true));
+    error_log("code saisi: " . $code);
 
-if (!$email) {
-    echo json_encode(['success' => false, 'message' => 'Email non trouvé en session']);
-    exit;
-}
-
-// Récupérer l'utilisateur par email
-$user = $etudiantModel->etudian($email);
-
-if (!$user) {
-    echo json_encode(['success' => false, 'message' => 'Utilisateur introuvable']);
-    exit;
-}
-
-// Vérifier si le code correspond et n’a pas été utilisé
-$storedCode = $etudiantModel->getCode($user['id_e']); // méthode à créer dans le model
-
-if ($storedCode && $storedCode['code_c'] == $code && $storedCode['used'] == 0) {
-    // Marquer le code comme utilisé
-    $etudiantModel->markCodeUsed($storedCode['id_c']); // méthode à créer dans le model
-    $_SESSION['user_id'] = $user['id_e'];
-    echo json_encode(['success' => true, 'message' => 'Code vérifié avec succès']);
-} else {
-    echo json_encode(['success' => false, 'message' => 'Code incorrect ou déjà utilisé']);
-}
+    if ($storedCode && $storedCode['code_c'] == $code && $storedCode['used'] == 0) {
+        $etudiantModel->markCodeUsed($storedCode['id_c']);
+        $_SESSION['user_id'] = $user['id_e'];
+        error_log("user_id sauvegardé: " . $user['id_e']);
+        echo json_encode(['success' => true, 'message' => 'Code vérifié avec succès']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Code incorrect ou déjà utilisé']);
+    }
     exit;
 }

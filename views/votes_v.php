@@ -112,32 +112,32 @@
   </section>
 
   <!-- Stats -->
-  <section class="py-20 bg-gradient-to-r from-blue-800 to-blue-600 text-white">
+<section class="py-20 bg-gradient-to-r from-blue-800 to-blue-600 text-white">
     <div class="container mx-auto px-6">
-      <div class="text-center mb-12">
-        <h2 class="text-4xl font-bold mb-4">Statistiques en Temps Réel</h2>
-        <p class="opacity-80">Suivez l’évolution du scrutin</p>
-      </div>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-        <div>
-          <h3 class="text-4xl font-bold" id="total-votes">0</h3>
-          <p class="opacity-80">Votes</p>
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold mb-4">Statistiques en Temps Réel</h2>
+            <p class="opacity-80">Suivez l'évolution du scrutin</p>
         </div>
-        <div>
-          <h3 class="text-4xl font-bold" id="total-candidates">0</h3>
-          <p class="opacity-80">Candidats</p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div>
+                <h3 class="text-4xl font-bold"><?= $total_votes ?? 0 ?></h3>
+                <p class="opacity-80">Votes</p>
+            </div>
+            <div>
+                <h3 class="text-4xl font-bold"><?= $total_candidats ?? 0 ?></h3>
+                <p class="opacity-80">Candidats</p>
+            </div>
+            <div>
+                <h3 class="text-4xl font-bold"><?= $total_electeurs ?? 0 ?></h3>
+                <p class="opacity-80">Électeurs</p>
+            </div>
+            <div>
+                <h3 class="text-4xl font-bold"><?= $participation ?? 0 ?>%</h3>
+                <p class="opacity-80">Participation</p>
+            </div>
         </div>
-        <div>
-          <h3 class="text-4xl font-bold" id="total-voters">0</h3>
-          <p class="opacity-80">Électeurs</p>
-        </div>
-        <div>
-          <h3 class="text-4xl font-bold" id="participation-rate">0%</h3>
-          <p class="opacity-80">Participation</p>
-        </div>
-      </div>
     </div>
-  </section>
+</section>
 
   <!-- Footer -->
   <footer class="footer footer-center p-10 bg-gray-100 text-gray-700">

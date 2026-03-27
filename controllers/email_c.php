@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
@@ -22,7 +22,7 @@ class Mail
         $mail->Password = 'jdgu wgkb zcvc nyyk'; // mot de passe d’application Gmail
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // TLS
         $mail->Port = 587; // Port recommandé pour TLS
-        $mail->setFrom('ralphloicnobel@gmail.com', 'Link-Shield');
+        $mail->setFrom('ralphloicnobel@gmail.com', 'GesVotes');
         $mail->addAddress($email);
         $mail->addReplyTo('ralphloicnobel@gmail.com'); // adresse de réponse correcte
         $mail->isHTML(true);
@@ -47,10 +47,11 @@ if (isset($_POST['submitBtn'])) {
     // requete pour enregistrer le code dans la base de données
     $verificationMail = Etudiante::verifyEmail($email);
     if ($verificationMail) {
-        $mail = new Mail($email, "Vote", "<h1>$code</h1>");
+        $mail = new Mail($email, "Votre code", "<h1>$code</h1>");
         $succes = $mail->send();
         if ($succes) {
             $ajouteCode = Etudiante::savecode($verificationMail['id_e'], $code);
+            $_SESSION['email'] = $email; //
             header("Location: " . PATH . "verifiercode");
         }
     } else {

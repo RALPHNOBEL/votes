@@ -41,12 +41,13 @@ class Etudiante
         $query->execute([$email]);
         return $query->fetch();
     }
-    public static function savecode($id, $code)
-    {
-        global $db;
-        $query = $db->prepare("INSERT INTO code_anonyme (id_c, code_c) VALUES (?,?)");
-        $query->execute([$id, $code]);
-    }
+ public static function savecode($id, $code)
+{
+    global $db;
+$query = $db->prepare("INSERT INTO code_anonyme (user, code_c) VALUES (?,?)
+                       ON DUPLICATE KEY UPDATE code_c = ?, used = 0");
+    $query->execute([$id, $code, $code]);
+}
 
     // Récupérer le dernier code pour un utilisateur
     public function getCode($userId)
@@ -147,4 +148,4 @@ class Etudiante
         $stmt->execute([$email]);
         return $stmt->fetch();
     }
-}
+}?>

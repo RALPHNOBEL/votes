@@ -243,8 +243,8 @@
                     <thead>
                         <tr>
                             <th>numero</th>
-                            <th>etudiante name</th>
-                            <th>etudiante name</th>
+                            <th>nom</th>
+                            <th>prenom</th>
                             <th> email</th>
                             <th>tel</th>
                             <th>matricule</th>
@@ -286,63 +286,85 @@
     </section>
     <script src="<?= PATH ?>assets/js/script.js"></script>
     <script>
-        document.getElementById("myForm").addEventListener("submit", function(event) {
-            let valid = true;
-            //verification du nom
-            const nom = document.getElementById("nom");
-            if (nom.value.trim() === "") {
-                document.getElementById("errorNom").style.display = "block";
-                valid = false;
-            } else {
-                document.getElementById("errorNom").style.dispaly = "none";
-            }
-            //VERIFICATION DU PRENOM
-            const prenom = document.getElementById("prenom");
-            if (prenom.value.trim() === "") {
-                document.getElementById("errorprenomNom").style.display = "block";
-                valid = false;
-            } else {
-                document.getElementById("errorprenomNom").style.dispaly = "none";
-            }
-            //VERIFICATION DU email
+document.getElementById("myForm").addEventListener("submit", function(e) {
+    let valid = true;
 
-            const email = document.getElementById("email");
-            if (prenom.value.trim() === "") {
-                document.getElementById("erroremail").style.display = "block";
-                valid = false;
-            } else {
-                document.getElementById("erroremail").style.dispaly = "none";
-            }
-            const filiere = document.getElementById("filiere");
-            if (prenom.value.trim() === "") {
-                document.getElementById("errorfiliere").style.display = "block";
-                valid = false;
-            } else {
-                document.getElementById("errorfiliere").style.dispaly = "none";
-            }
-            const tel = document.getElementById("tel");
-            if (prenom.value.trim() === "") {
-                document.getElementById("errorprenomNom").style.display = "block";
-                valid = false;
-            } else {
-                document.getElementById("errorprenomNom").style.dispaly = "none";
-            }
-            const birthdate = document.getElementById("bithdate");
-            if (prenom.value.trim() === "") {
-                document.getElementById("errorprenomNom").style.display = "block";
-                valid = false;
-            } else {
-                document.getElementById("errorprenomNom").style.dispaly = "none";
-            }
-            const matricule = document.getElementById("matricule");
-            if (prenom.value.trim() === "") {
-                document.getElementById("errorprenomNom").style.display = "block";
-                valid = false;
-            } else {
-                document.getElementById("errorprenomNom").style.dispaly = "none";
-            }
-        })
-    </script>
+    // Validation filière - lettres uniquement
+    const filiere = document.querySelector("input[name='filiere']");
+    const filiereRegex = /^[a-zA-ZÀ-ÿ\s\-]+$/;
+    
+    if(!filiereRegex.test(filiere.value.trim())) {
+        filiere.style.border = "2px solid red";
+        
+        // Afficher message d'erreur
+        let errMsg = document.getElementById('errorFiliere');
+        if(!errMsg) {
+            errMsg = document.createElement('span');
+            errMsg.id = 'errorFiliere';
+            errMsg.style.color = 'red';
+            errMsg.style.fontSize = '13px';
+            filiere.parentNode.insertBefore(errMsg, filiere.nextSibling);
+        }
+        errMsg.textContent = "La filière ne doit contenir que des lettres.";
+        valid = false;
+    } else {
+        filiere.style.border = "1px solid var(--color-bg)";
+        const errMsg = document.getElementById('errorFiliere');
+        if(errMsg) errMsg.textContent = '';
+    }
+
+    // Validation nom
+    const nom = document.querySelector("input[name='nom_e']");
+    if(nom.value.trim() === '') {
+        nom.style.border = "2px solid red";
+        valid = false;
+    } else {
+        nom.style.border = "1px solid var(--color-bg)";
+    }
+
+    // Validation prénom
+    const prenom = document.querySelector("input[name='prenom_e']");
+    if(prenom.value.trim() === '') {
+        prenom.style.border = "2px solid red";
+        valid = false;
+    } else {
+        prenom.style.border = "1px solid var(--color-bg)";
+    }
+
+    // Validation email
+    const email = document.querySelector("input[name='email']");
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!emailRegex.test(email.value.trim())) {
+        email.style.border = "2px solid red";
+        valid = false;
+    } else {
+        email.style.border = "1px solid var(--color-bg)";
+    }
+
+    // Validation téléphone - chiffres uniquement
+    const tel = document.querySelector("input[name='tel_e']");
+    const telRegex = /^[0-9\+\s\-]+$/;
+    if(!telRegex.test(tel.value.trim())) {
+        tel.style.border = "2px solid red";
+        valid = false;
+    } else {
+        tel.style.border = "1px solid var(--color-bg)";
+    }
+
+    // Validation matricule
+    const matricule = document.querySelector("input[name='matricule']");
+    if(matricule.value.trim() === '') {
+        matricule.style.border = "2px solid red";
+        valid = false;
+    } else {
+        matricule.style.border = "1px solid var(--color-bg)";
+    }
+
+    if(!valid) {
+        e.preventDefault();
+    }
+});
+</script>
 </body>
 
 </html>

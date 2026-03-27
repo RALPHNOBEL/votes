@@ -7,12 +7,6 @@ class Candidate
     public $id_e;
     public $photo; // Champ ajouté pour la photo du candidat
 
-
-
-
-
-
-
     public function __construct($db)
     {
         $this->conn = $db;
@@ -35,48 +29,40 @@ class Candidate
         $stmt->execute();
         return $stmt;
     }
-    static function addCandidate($id_e, $description)
-    {
-        global $db;
-        // Lets check if the electeur already exists
-        $query = $db->prepare("SELECT * FROM candidate WHERE id_e = ? AND  description = ?  ");
-        $query->execute([$id_e, $description]);
-
-        if ($query->rowCount() > 0) {
-            // If electeur already exists
-            return false;
-        } else {
-
-            //pour regarder le null
-            $query2 = $db->prepare("INSERT INTO candidate ( id_e,description) VALUES ( ?,?)");
-            $valid = $query2->execute([$id_e, $description]);
-            if ($valid) {
-                // Electeur added successfully
-
-                return true;
-            } else {
-                return false;
-            }
-        }
+    static function addCandidate($id_e, $description, $photo = '')
+{
+    global $db;
+    $etudiant = Etudiante::getEtudianteById($id_e);
+    $nom_c = $etudiant['nom_e'] . ' ' . $etudiant['prenom_e'];
+    
+    $query = $db->prepare("SELECT * FROM candidate WHERE id_e = ? AND description = ?");
+    $query->execute([$id_e, $description]);
+    
+    if ($query->rowCount() > 0) {
+        return false;
     }
+    
+    $query2 = $db->prepare("INSERT INTO candidate (id_e, description, nom_c, photo) VALUES (?, ?, ?, ?)");
+    return $query2->execute([$id_e, $description, $nom_c, $photo]);
+}
 
 
 
     static function getCandidateById($id_c)
-    {
-        global $db;
-        $query = $db->prepare("SELECT * FROM Candidate WHERE id_c= ?");
-        $query->execute([$id_c]);
-        return $query->fetch();
-    }
+{
+    global $db;
+    $query = $db->prepare("SELECT * FROM candidate WHERE id_c = ?");
+    $query->execute([$id_c]);
+    return $query->fetch(PDO::FETCH_ASSOC); // ← ajouter FETCH_ASSOC
+}
 
     static function getAllCandidates()
-    {
-        global $db;
-        $query = $db->prepare("SELECT c.*, e.* FROM candidate c INNER JOIN etudiante e ON c.id_e = e.id_e ");
-        $query->execute([]);
-        return $query->fetchAll();
-    }
+{
+    global $db;
+    $query = $db->prepare("SELECT * FROM candidate");
+    $query->execute([]);
+    return $query->fetchAll();
+}
     static function delete($id_c)
     {
         global $db;
@@ -89,18 +75,15 @@ class Candidate
             return false;
         }
     }
-    static function update($id_e, $id_c, $description)
-    {
-        global $db;
-        $query = $db->prepare("UPDATE Candidate SET   id_e = ?, description = ? WHERE id_c = ?");
-        $valid = $query->execute([$id_e, $id_c, $description]);
-        if ($valid) {
-            // Candidate updated successfully
-            return true;
-        } else {
-            return false;
-        }
-    }
+    static function update($id_e, $id_c, $description, $photo = '')
+{
+    global $db;
+    $etudiant = Etudiante::getEtudianteById($id_e);
+    $nom_c = $etudiant['nom_e'] . ' ' . $etudiant['prenom_e'];
+    
+    $query = $db->prepare("UPDATE candidate SET id_e=?, description=?, nom_c=?, photo=? WHERE id_c=?");
+    return $query->execute([$id_e, $description, $nom_c, $photo, $id_c]);
+}
     static function getNumberCandidates()
     { //permet d entrer le id_cbre
         global $db;
@@ -143,4 +126,5 @@ class Candidate
         $stmt = $db->prepare("INSERT INTO vote (id_el, id_c) VALUES (?, ?)");
         return $stmt->execute([$id_el, $id_c]);
     }
+
 }

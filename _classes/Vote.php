@@ -122,14 +122,14 @@ global $db;
         // Obtenir les résultats d'une élection
    public static function getResultsByElection($id_el) {
     global $db;
-    $query = "SELECT c.id_c, c.date_vote, COUNT(v.id_v) AS votes
+    $query = "SELECT c.id_c, c.nom_c, c.description, COUNT(v.id_v) AS votes
               FROM candidate c
               LEFT JOIN vote v ON c.id_c = v.id_c AND v.id_el = ?
               WHERE c.id_el = ?
-              GROUP BY c.id_c, c.date_vote";
+              GROUP BY c.id_c, c.nom_c, c.description";
     $stmt = $db->prepare($query);
-    $stmt->execute([':id_el', $id_el]);
-    return $stmt->fetchAll();
+    $stmt->execute([$id_el, $id_el]); // ✅ 2 fois car 2 "?" dans la requête
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 // ...existing code...
 

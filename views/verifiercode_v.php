@@ -343,106 +343,85 @@
     </div>
 
     <script>
-        document.getElementById('codeForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+    document.getElementById('codeForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const code = document.getElementById('code').value.trim();
+        const cleanCode = code.replace(/\s/g, '');
+        const submitBtn = document.getElementById('submitBtn');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        
+        if (!cleanCode || cleanCode.length !== 6) {
+            showMessage('Veuillez entrer un code de 6 chiffres', 'error');
+            document.getElementById('code').classList.add('shake');
+            setTimeout(() => {
+                document.getElementById('code').classList.remove('shake');
+            }, 500);
+            return;
+        }
+        
+        loadingOverlay.classList.add('active');
+        submitBtn.disabled = true;
+        
+        try {
+            await new Promise(resolve => setTimeout(resolve, 2000));
             
-            const code = document.getElementById('code').value.trim();
-            const messageEl = document.getElementById('message');
-            const submitBtn = document.getElementById('submitBtn');
-            const loadingOverlay = document.getElementById('loadingOverlay');
+            const response = await fetch('controllers/verifiercode_c.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code: cleanCode }),
+            });
             
-            // Validation basique du code
-            if (!code || code.length !== 6) {
-                showMessage('Veuillez entrer un code de 6 chiffres', 'error');
-                document.getElementById('code').classList.add('shake');
+            const data = await response.json();
+            
+            if (data.success) {
+                showMessage(data.message, 'success');
                 setTimeout(() => {
-                    document.getElementById('code').classList.remove('shake');
-                }, 500);
-                return;
-            }
-            
-            // Afficher l'animation de chargement
-            loadingOverlay.classList.add('active');
-            submitBtn.disabled = true;
-            
-            try {
-                // Simuler un délai réseau (à retirer en production)
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                
-                const response = await fetch('controllers/verifiercode_c.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ code }),
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    showMessage(data.message, 'success');
-                    
-                    // Redirection après un délai
-                    setTimeout(() => {
-                        window.location.href = '/votes/voter';
-                    }, 1500);
-                } else {
-                    showMessage(data.message || 'Code de vérification incorrect.', 'error');
-                    loadingOverlay.classList.remove('active');
-                    submitBtn.disabled = false;
-                }
-            } catch (error) {
-                console.error('Erreur:', error);
-                showMessage('Une erreur est survenue. Veuillez réessayer.', 'error');
+                    window.location.href = '/votes/voter';
+                }, 1500);
+            } else {
+                showMessage(data.message || 'Code de vérification incorrect.', 'error');
                 loadingOverlay.classList.remove('active');
                 submitBtn.disabled = false;
             }
-        });
-        
-        // Fonction pour renvoyer le code
-        document.getElementById('resendLink').addEventListener('click', async (e) => {
-            e.preventDefault();
-            
-            try {
-                const response = await fetch('controllers/renvoyer_code.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    showMessage('Un nouveau code a été envoyé à votre adresse email.', 'success');
-                } else {
-                    showMessage('Erreur lors de l\'envoi du code. Veuillez réessayer.', 'error');
-                }
-            } catch (error) {
-                console.error('Erreur:', error);
-                showMessage('Une erreur est survenue. Veuillez réessayer.', 'error');
-            }
-        });
-        
-        function showMessage(text, type) {
-            const messageEl = document.getElementById('message');
-            messageEl.textContent = text;
-            messageEl.className = `message ${type}`;
-            messageEl.style.display = 'block';
+        } catch (error) {
+            console.error('Erreur:', error);
+            showMessage('Une erreur est survenue. Veuillez réessayer.', 'error');
+            loadingOverlay.classList.remove('active');
+            submitBtn.disabled = false;
         }
+    }); // ← fin du listener formulaire
+
+    // EN DEHORS du listener formulaire
+    document.getElementById('resendLink').addEventListener('click', async (e) => {
+        e.preventDefault();
         
-        // Formatage automatique du code (ajout d'espaces)
-        document.getElementById('code').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\s/g, '').replace(/\D/g, '');
+        try {
+            const response = await fetch('controllers/renvoyer_code.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
             
-            if (value.length > 8) {
-                value = value.substring(0, 7);
+            const data = await response.json();
+            
+            if (data.success) {
+                showMessage('Un nouveau code a été envoyé à votre adresse email.', 'success');
+            } else {
+                showMessage('Erreur lors de l\'envoi du code. Veuillez réessayer.', 'error');
             }
-            
-            // Ajouter un espace tous les 2 caractères
-            // value = value.replace(/(.{2})/g, '$1 ').trim();
-            // e.target.value = value;
-        });
-    </script>
+        } catch (error) {
+            console.error('Erreur:', error);
+            showMessage('Une erreur est survenue. Veuillez réessayer.', 'error');
+        }
+    });
+
+    // EN DEHORS du listener formulaire
+    function showMessage(text, type) {
+        const messageEl = document.getElementById('message');
+        messageEl.textContent = text;
+        messageEl.className = `message ${type}`;
+        messageEl.style.display = 'block';
+    }
+</script>
 </body>
 </html>
